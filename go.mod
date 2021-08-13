@@ -7,6 +7,8 @@ require (
 	github.com/go-resty/resty/v2 v2.2.0
 	github.com/google/go-cmp v0.5.2 // indirect
 	github.com/google/go-querystring v1.0.0
+	github.com/google/uuid v1.1.1
+	github.com/gorilla/mux v1.8.0
 	github.com/hashicorp/hcl/v2 v2.3.0 // indirect
 	github.com/hashicorp/terraform-plugin-sdk v1.8.0
 	github.com/kr/text v0.2.0 // indirect

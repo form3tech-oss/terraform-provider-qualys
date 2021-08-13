@@ -30,14 +30,14 @@ func resourceGCPConnector() *schema.Resource {
 				Type:     schema.TypeString,
 				Optional: true,
 			},
-			"config_file": {
+			"gcp_credentials_json": {
 				Type:      schema.TypeString,
 				Sensitive: true,
 				Required:  true,
 			},
 			"project_id": {
 				Type:     schema.TypeString,
-				Computed: true,
+				Required: true,
 			},
 			"cloud_provider": {
 				Type:     schema.TypeString,
@@ -53,7 +53,8 @@ func resourceGCPConnectorCreate(d *schema.ResourceData, meta interface{}) error 
 	opt := gcp.NewConnectorConfig().
 		WithName(d.Get("name").(string)).
 		WithDescription(d.Get("description").(string)).
-		WithConfigFile(d.Get("config_file").(string))
+		WithConfigFile(d.Get("gcp_credentials_json").(string)).
+		WithProjectId(d.Get("project_id").(string))
 
 	service := meta.(*gcp.ConnectorService)
 	connector, err := service.Create(opt)
@@ -85,7 +86,8 @@ func resourceGCPConnectorUpdate(d *schema.ResourceData, meta interface{}) error 
 	opt := gcp.NewConnectorConfig().
 		WithName(d.Get("name").(string)).
 		WithDescription(d.Get("description").(string)).
-		WithConfigFile(d.Get("config_file").(string))
+		WithConfigFile(d.Get("gcp_credentials_json").(string)).
+		WithProjectId(d.Get("project_id").(string))
 
 	service := meta.(*gcp.ConnectorService)
 	err := service.Update(d.Id(), opt)
@@ -105,9 +107,9 @@ func resourceGCPConnectorDelete(d *schema.ResourceData, meta interface{}) error 
 
 func resourceDataFromConnector(d *schema.ResourceData, connector *gcp.Connector) error {
 	// TODO wtf is this doing?
-	_, ok := d.GetOk("config_file")
+	_, ok := d.GetOk("gcp_credentials_json")
 	if !ok {
-		if err := d.Set("config_file", ""); err != nil {
+		if err := d.Set("gcp_credentials_json", ""); err != nil {
 			return err
 		}
 	}
@@ -116,7 +118,6 @@ func resourceDataFromConnector(d *schema.ResourceData, connector *gcp.Connector)
 		d.Set("connector_id", connector.ConnectorID),
 		d.Set("name", connector.Name),
 		d.Set("description", connector.Description),
-		d.Set("groups", connector.Groups),
 		d.Set("project_id", connector.Project),
 	)
 }

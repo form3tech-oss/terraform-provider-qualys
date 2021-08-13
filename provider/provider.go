@@ -55,6 +55,9 @@ func combineErrors(errs ...error) error {
 	builder := &strings.Builder{}
 
 	for _, e := range errs {
+		if e == nil {
+			continue
+		}
 		builder.WriteString(e.Error())
 	}
 

@@ -11,6 +11,7 @@ env:
   global:
     - TF_ACC=1
     - GO111MODULE=on
+    - LOCAL=true
 go:
   - 1.16
 language: go
