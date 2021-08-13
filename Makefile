@@ -16,9 +16,6 @@ build-only:
 
 build: fmtcheck vet testacc build-only
 
-clean:
-	rm -rf pkg/
-
 fmt:
 	gofmt -w $(GOFMT_FILES)
 
@@ -34,12 +31,4 @@ vet:
 		exit 1; \
 	fi
 
-download-cloudview-swagger: swagger/swagger.json
-	@mkdir -p swagger
-	@rm swagger/swagger.json
-	@wget -q https://qualysguard.qg2.apps.qualys.com/cloudview-api/v2/api-docs -O swagger/swagger.json
-
-build-swagger:
-	@scripts/swagger.sh
-
-.PHONY: build build-only test testacc vet fmt fmtcheck errcheck vendor-status test-compile
+.PHONY:test testacc vet fmt fmtcheck

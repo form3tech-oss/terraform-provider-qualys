@@ -103,12 +103,12 @@ func (s *ConnectorService) Get(id string) (*Connector, error) {
 }
 
 func (s *ConnectorService) Create(opt *ConnectorConfig) (*Connector, error) {
-
 	connector := new(Connector)
 	v, err := query.Values(opt)
 	if err != nil {
 		return nil, err
 	}
+
 	req := s.client.R().
 		SetResult(&connector).
 		SetFormDataFromValues(v)
@@ -120,7 +120,6 @@ func (s *ConnectorService) Create(opt *ConnectorConfig) (*Connector, error) {
 	}
 
 	resp, err := req.Post(apiPath)
-
 	if err != nil {
 		return nil, err
 	}
@@ -139,7 +138,6 @@ func (s *ConnectorService) Create(opt *ConnectorConfig) (*Connector, error) {
 }
 
 func (s *ConnectorService) Update(id string, opt *ConnectorConfig) error {
-
 	path := fmt.Sprintf("%s/%s", apiPath, id)
 
 	connector := new(Connector)

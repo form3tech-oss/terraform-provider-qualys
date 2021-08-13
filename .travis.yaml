@@ -1,18 +1,20 @@
-language: go
-go:
-  - 1.16
-services:
-  - docker
-script:
-  - make
+---
 deploy:
-  - provider: script
+  -
+    provider: script
+    script: "bash scripts/goreleaser.sh"
     skip_cleanup: true
-    script: bash scripts/goreleaser.sh
-    on:
+    true:
+      condition: "$TRAVIS_OS_NAME = linux"
       tags: true
-      condition: $TRAVIS_OS_NAME = linux
 env:
   global:
     - TF_ACC=1
     - GO111MODULE=on
+go:
+  - 1.16
+language: go
+script:
+  - make
+services:
+  - docker
