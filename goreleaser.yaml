@@ -1,0 +1,11 @@
+builds:
+  - binary: terraform-provider-qualys_v{{.Version}}
+    goos:
+      - darwin
+      - linux
+      - windows
+    goarch:
+      - amd64
+archives:
+  -
+    format: zip
