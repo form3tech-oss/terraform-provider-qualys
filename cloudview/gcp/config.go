@@ -21,7 +21,7 @@ func (c *ConnectorConfig) WithDescription(desc string) *ConnectorConfig {
 	return c
 }
 
-func (c *ConnectorConfig) WithConfigFile(file string) *ConnectorConfig {
+func (c *ConnectorConfig) WithCredentialsJSON(file string) *ConnectorConfig {
 	c.ConfigFile = file
 	return c
 }

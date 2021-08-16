@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"os"
+	"time"
 
 	"github.com/google/uuid"
 
@@ -45,6 +46,7 @@ func getConnectorHandlerFunc(state connectorState) http.HandlerFunc {
 			must(err)
 			return
 		}
+		conn.TotalAssets = len(state)
 
 		bs, err := json.Marshal(conn)
 		must(err)
@@ -58,11 +60,12 @@ func getConnectorHandlerFunc(state connectorState) http.HandlerFunc {
 func createConnectorHandlerFunc(state connectorState) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		conn := gcp.Connector{
-			ConnectorID: uuid.New().String(),
-			Description: r.FormValue("description"),
-			Name:        r.FormValue("name"),
-			Project:     r.FormValue("projectId"),
-			Provider:    "gcp",
+			ConnectorID:  uuid.New().String(),
+			Description:  r.FormValue("description"),
+			Name:         r.FormValue("name"),
+			Project:      r.FormValue("projectId"),
+			LastSyncedOn: time.Now().String(),
+			Provider:     "gcp",
 		}
 		state[conn.ConnectorID] = &conn
 

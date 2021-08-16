@@ -11,13 +11,14 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
 
-func TestAccGcpConnector_basic(t *testing.T) {
+func TestResourceGcpConnector_basic(t *testing.T) {
 	projectId := uuid.New()
 
 	ts := testServer()
 	defer ts.Close()
 
 	resource.Test(t, resource.TestCase{
+		IsUnitTest: true,
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,
 		CheckDestroy: func(state *terraform.State) error {

@@ -53,7 +53,7 @@ func resourceGCPConnectorCreate(d *schema.ResourceData, meta interface{}) error 
 	opt := gcp.NewConnectorConfig().
 		WithName(d.Get("name").(string)).
 		WithDescription(d.Get("description").(string)).
-		WithConfigFile(d.Get("gcp_credentials_json").(string)).
+		WithCredentialsJSON(d.Get("gcp_credentials_json").(string)).
 		WithProjectId(d.Get("project_id").(string))
 
 	service := meta.(*gcp.ConnectorService)
@@ -86,7 +86,7 @@ func resourceGCPConnectorUpdate(d *schema.ResourceData, meta interface{}) error 
 	opt := gcp.NewConnectorConfig().
 		WithName(d.Get("name").(string)).
 		WithDescription(d.Get("description").(string)).
-		WithConfigFile(d.Get("gcp_credentials_json").(string)).
+		WithCredentialsJSON(d.Get("gcp_credentials_json").(string)).
 		WithProjectId(d.Get("project_id").(string))
 
 	service := meta.(*gcp.ConnectorService)
