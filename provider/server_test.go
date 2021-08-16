@@ -15,7 +15,7 @@ import (
 
 type connectorState map[string]*gcp.Connector
 
-func testServer() {
+func testServer() *httptest.Server {
 	connectors := make(connectorState)
 
 	router := mux.NewRouter()
@@ -29,6 +29,8 @@ func testServer() {
 	must(os.Setenv("QUALYS_URL", ts.URL))
 	must(os.Setenv("QUALYS_USERNAME", "foo"))
 	must(os.Setenv("QUALYS_PASSWORD", "bar"))
+
+	return ts
 }
 
 func getConnectorHandlerFunc(state connectorState) http.HandlerFunc {
@@ -39,6 +41,8 @@ func getConnectorHandlerFunc(state connectorState) http.HandlerFunc {
 		conn, ok := state[id]
 		if !ok {
 			w.WriteHeader(http.StatusNotFound)
+			_, err := fmt.Fprint(w, "Not Found")
+			must(err)
 			return
 		}
 

@@ -2,8 +2,10 @@ package provider
 
 import (
 	"fmt"
+	"os"
 	"testing"
 
+	"github.com/form3tech-oss/terraform-provider-qualys/cloudview/gcp"
 	"github.com/google/uuid"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
@@ -12,11 +14,20 @@ import (
 func TestAccGcpConnector_basic(t *testing.T) {
 	projectId := uuid.New()
 
+	ts := testServer()
+	defer ts.Close()
+
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,
 		CheckDestroy: func(state *terraform.State) error {
-			// TODO
+			service := gcp.NewService(os.Getenv("QUALYS_URL"), os.Getenv("QUALYS_USERNAME"), os.Getenv("QUALYS_PASSWORD"))
+			for _, rs := range state.RootModule().Resources {
+				_, err := service.Get(rs.Primary.ID)
+				if err.Error() != "Not Found" {
+					return fmt.Errorf("expected 'Not Found', unknown error: %s", err)
+				}
+			}
 			return nil
 		},
 		Steps: []resource.TestStep{

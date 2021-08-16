@@ -44,6 +44,4 @@ func testAccPreCheck(t *testing.T) {
 		}
 		return
 	}
-
-	testServer()
 }
