@@ -83,10 +83,18 @@ func updateConnectorHandlerFunc(state connectorState) http.HandlerFunc {
 		vars := mux.Vars(r)
 		id := vars["connector_id"]
 
-		conn := gcp.Connector{}
-		dec := json.NewDecoder(r.Body)
-		must(dec.Decode(&conn))
-		state[id] = &conn
+		conn, ok := state[id]
+		if !ok {
+			w.WriteHeader(http.StatusNotFound)
+			_, err := fmt.Fprint(w, "Not Found")
+			must(err)
+			return
+		}
+
+		conn.Description = r.FormValue("description")
+		conn.Name = r.FormValue("name")
+		conn.Project = r.FormValue("projectId")
+		conn.LastSyncedOn = time.Now().String()
 
 		bs, err := json.Marshal(conn)
 		must(err)
