@@ -1,12 +1,9 @@
 GOFMT_FILES?=$$(find . -name '*.go' |grep -v vendor)
 
-default: build test testacc
+default: build test
 
 test: fmtcheck
 	go test -v . ./provider
-
-testacc: fmtcheck
-	go test -v ./provider -run="TestAcc"
 
 build-only:
 	@go install
@@ -14,7 +11,7 @@ build-only:
 	@cp $(GOPATH)/bin/terraform-provider-qualys ~/.terraform.d/plugins/terraform-provider-qualys
 	@echo "Build succeeded"
 
-build: fmtcheck vet testacc build-only
+build: fmtcheck vet build-only
 
 fmt:
 	gofmt -w $(GOFMT_FILES)
@@ -31,4 +28,4 @@ vet:
 		exit 1; \
 	fi
 
-.PHONY:test testacc vet fmt fmtcheck
+.PHONY:test vet fmt fmtcheck

@@ -9,7 +9,6 @@ deploy:
       tags: true
 env:
   global:
-    - TF_ACC=1
     - GO111MODULE=on
     - LOCAL=true
 go:
