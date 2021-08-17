@@ -18,19 +18,10 @@ func TestResourceGcpConnector_basic(t *testing.T) {
 	defer ts.Close()
 
 	resource.Test(t, resource.TestCase{
-		IsUnitTest: true,
-		PreCheck:   func() { testAccPreCheck(t) },
-		Providers:  testAccProviders,
-		CheckDestroy: func(state *terraform.State) error {
-			service := gcp.NewService(os.Getenv("QUALYS_URL"), os.Getenv("QUALYS_USERNAME"), os.Getenv("QUALYS_PASSWORD"))
-			for _, rs := range state.RootModule().Resources {
-				_, err := service.Get(rs.Primary.ID)
-				if err.Error() != "Not Found" {
-					return fmt.Errorf("expected 'Not Found', unknown error: %s", err)
-				}
-			}
-			return nil
-		},
+		IsUnitTest:   true,
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckResourcesDestroyed,
 		Steps: []resource.TestStep{
 			{
 				Config: getHclConfig(projectId, "test name"),
@@ -52,19 +43,10 @@ func TestResourceGcpConnector_update(t *testing.T) {
 	defer ts.Close()
 
 	resource.Test(t, resource.TestCase{
-		IsUnitTest: true,
-		PreCheck:   func() { testAccPreCheck(t) },
-		Providers:  testAccProviders,
-		CheckDestroy: func(state *terraform.State) error {
-			service := gcp.NewService(os.Getenv("QUALYS_URL"), os.Getenv("QUALYS_USERNAME"), os.Getenv("QUALYS_PASSWORD"))
-			for _, rs := range state.RootModule().Resources {
-				_, err := service.Get(rs.Primary.ID)
-				if err.Error() != "Not Found" {
-					return fmt.Errorf("expected 'Not Found', unknown error: %s", err)
-				}
-			}
-			return nil
-		},
+		IsUnitTest:   true,
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckResourcesDestroyed,
 		Steps: []resource.TestStep{
 			{
 				Config: getHclConfig(projectId, "test name"),
@@ -103,4 +85,15 @@ func testAccCheckConnectorExists() resource.TestCheckFunc {
 	return func(state *terraform.State) error {
 		return nil
 	}
+}
+
+func testAccCheckResourcesDestroyed(state *terraform.State) error {
+	service := gcp.NewService(os.Getenv("QUALYS_URL"), os.Getenv("QUALYS_USERNAME"), os.Getenv("QUALYS_PASSWORD"))
+	for _, rs := range state.RootModule().Resources {
+		_, err := service.Get(rs.Primary.ID)
+		if err.Error() != "Not Found" {
+			return fmt.Errorf("expected 'Not Found', unknown error: %s", err)
+		}
+	}
+	return nil
 }
