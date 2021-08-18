@@ -81,12 +81,6 @@ resource "qualys_gcp_connector" "test" {
 `, name, projectId.String())
 }
 
-func testAccCheckConnectorExists() resource.TestCheckFunc {
-	return func(state *terraform.State) error {
-		return nil
-	}
-}
-
 func testAccCheckResourcesDestroyed(state *terraform.State) error {
 	service := gcp.NewService(os.Getenv("QUALYS_URL"), os.Getenv("QUALYS_USERNAME"), os.Getenv("QUALYS_PASSWORD"))
 	for _, rs := range state.RootModule().Resources {
