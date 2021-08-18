@@ -106,7 +106,6 @@ func resourceGCPConnectorDelete(d *schema.ResourceData, meta interface{}) error 
 }
 
 func resourceDataFromConnector(d *schema.ResourceData, connector *gcp.Connector) error {
-	// TODO wtf is this doing?
 	_, ok := d.GetOk("gcp_credentials_json")
 	if !ok {
 		if err := d.Set("gcp_credentials_json", ""); err != nil {
