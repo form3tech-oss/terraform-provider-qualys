@@ -1,15 +1,13 @@
 package provider
 
 import (
-	"errors"
-	"strings"
-
+	"context"
 	"github.com/form3tech-oss/terraform-provider-qualys/cloudview/gcp"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-func Provider() terraform.ResourceProvider {
+func Provider() *schema.Provider {
 	return &schema.Provider{
 		Schema: map[string]*schema.Schema{
 			"username": {
@@ -40,29 +38,25 @@ func Provider() terraform.ResourceProvider {
 			"qualys_gcp_connector": resourceGCPConnector(),
 		},
 
-		ConfigureFunc: providerConfigure,
+		ConfigureContextFunc: providerConfigure,
 	}
 }
 
-func providerConfigure(d *schema.ResourceData) (interface{}, error) {
+func providerConfigure(_ context.Context, d *schema.ResourceData) (interface{}, diag.Diagnostics) {
 	username := d.Get("username").(string)
 	password := d.Get("password").(string)
 	baseURL := d.Get("base_url").(string)
-	return gcp.NewService(baseURL, username, password), nil
+	return gcp.NewService(baseURL, username, password), []diag.Diagnostic{}
 }
 
-func combineErrors(errs ...error) error {
-	builder := &strings.Builder{}
+func combineErrors(errs ...error) diag.Diagnostics {
+	var diags diag.Diagnostics
 
 	for _, e := range errs {
 		if e == nil {
-			continue
+			diags = append(diags, diag.FromErr(e)...)
 		}
-		builder.WriteString(e.Error())
 	}
 
-	if builder.Len() > 0 {
-		return errors.New(builder.String())
-	}
-	return nil
+	return diags
 }

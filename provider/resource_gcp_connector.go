@@ -1,20 +1,22 @@
 package provider
 
 import (
+	"context"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"log"
 
-	gcp "github.com/form3tech-oss/terraform-provider-qualys/cloudview/gcp"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/form3tech-oss/terraform-provider-qualys/cloudview/gcp"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func resourceGCPConnector() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceGCPConnectorCreate,
-		Read:   resourceGCPConnectorRead,
-		Update: resourceGCPConnectorUpdate,
-		Delete: resourceGCPConnectorDelete,
+		CreateContext: resourceGCPConnectorCreate,
+		ReadContext:   resourceGCPConnectorRead,
+		UpdateContext: resourceGCPConnectorUpdate,
+		DeleteContext: resourceGCPConnectorDelete,
 		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
+			StateContext: schema.ImportStatePassthroughContext,
 		},
 
 		Schema: map[string]*schema.Schema{
@@ -47,7 +49,7 @@ func resourceGCPConnector() *schema.Resource {
 	}
 }
 
-func resourceGCPConnectorCreate(d *schema.ResourceData, meta interface{}) error {
+func resourceGCPConnectorCreate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	log.Printf("[DEBUG] create connector %q", d.Get("name").(string))
 
 	opt := gcp.NewConnectorConfig().
@@ -59,28 +61,28 @@ func resourceGCPConnectorCreate(d *schema.ResourceData, meta interface{}) error 
 	service := meta.(*gcp.ConnectorService)
 	connector, err := service.Create(opt)
 	if err != nil {
-		return err
+		return diag.FromErr(err)
 	}
 
 	d.SetId(connector.ConnectorID)
 
-	return resourceGCPConnectorRead(d, meta)
+	return resourceGCPConnectorRead(ctx, d, meta)
 }
 
-func resourceGCPConnectorRead(d *schema.ResourceData, meta interface{}) error {
+func resourceGCPConnectorRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	log.Printf("[DEBUG] Reading gcp connector %q ", d.Id())
 
 	service := meta.(*gcp.ConnectorService)
 	connector, err := service.Get(d.Id())
 	if err != nil {
 		d.SetId("")
-		return err
+		return diag.FromErr(err)
 	}
 
-	return resourceDataFromConnector(d, connector)
+	return resourceDataFromConnector(ctx, d, connector)
 }
 
-func resourceGCPConnectorUpdate(d *schema.ResourceData, meta interface{}) error {
+func resourceGCPConnectorUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	log.Printf("[DEBUG] update gcp connector %s", d.Id())
 
 	opt := gcp.NewConnectorConfig().
@@ -92,24 +94,24 @@ func resourceGCPConnectorUpdate(d *schema.ResourceData, meta interface{}) error 
 	service := meta.(*gcp.ConnectorService)
 	err := service.Update(d.Id(), opt)
 	if err != nil {
-		return err
+		return diag.FromErr(err)
 	}
 
-	return resourceGCPConnectorRead(d, meta)
+	return resourceGCPConnectorRead(ctx, d, meta)
 }
 
-func resourceGCPConnectorDelete(d *schema.ResourceData, meta interface{}) error {
+func resourceGCPConnectorDelete(_ context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	log.Printf("[DEBUG] Delete qualys connector %s", d.Id())
 
 	service := meta.(*gcp.ConnectorService)
-	return service.Delete([]string{d.Id()})
+	return diag.FromErr(service.Delete([]string{d.Id()}))
 }
 
-func resourceDataFromConnector(d *schema.ResourceData, connector *gcp.Connector) error {
+func resourceDataFromConnector(_ context.Context, d *schema.ResourceData, connector *gcp.Connector) diag.Diagnostics {
 	_, ok := d.GetOk("gcp_credentials_json")
 	if !ok {
 		if err := d.Set("gcp_credentials_json", ""); err != nil {
-			return err
+			return diag.FromErr(err)
 		}
 	}
 

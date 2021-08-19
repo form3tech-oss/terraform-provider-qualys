@@ -7,8 +7,8 @@ import (
 
 	"github.com/form3tech-oss/terraform-provider-qualys/cloudview/gcp"
 	"github.com/google/uuid"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
 func TestResourceGcpConnector_basic(t *testing.T) {
@@ -18,10 +18,10 @@ func TestResourceGcpConnector_basic(t *testing.T) {
 	defer ts.Close()
 
 	resource.Test(t, resource.TestCase{
-		IsUnitTest:   true,
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckResourcesDestroyed,
+		IsUnitTest:        true,
+		PreCheck:          func() { testAccPreCheck(t) },
+		ProviderFactories: testAccProviders,
+		CheckDestroy:      testAccCheckResourcesDestroyed,
 		Steps: []resource.TestStep{
 			{
 				Config: getHclConfig(projectId, "test name"),
@@ -43,10 +43,10 @@ func TestResourceGcpConnector_update(t *testing.T) {
 	defer ts.Close()
 
 	resource.Test(t, resource.TestCase{
-		IsUnitTest:   true,
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckResourcesDestroyed,
+		IsUnitTest:        true,
+		PreCheck:          func() { testAccPreCheck(t) },
+		ProviderFactories: testAccProviders,
+		CheckDestroy:      testAccCheckResourcesDestroyed,
 		Steps: []resource.TestStep{
 			{
 				Config: getHclConfig(projectId, "test name"),

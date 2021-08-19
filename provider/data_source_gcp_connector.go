@@ -1,15 +1,17 @@
 package provider
 
 import (
+	"context"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"log"
 
 	"github.com/form3tech-oss/terraform-provider-qualys/cloudview/gcp"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func dataSourceGCPConnector() *schema.Resource {
 	return &schema.Resource{
-		Read: dataSourceGCPConnectorRead,
+		ReadContext: dataSourceGCPConnectorRead,
 
 		Schema: map[string]*schema.Schema{
 			"cloud_provider": {
@@ -64,13 +66,13 @@ func dataSourceGCPConnector() *schema.Resource {
 	}
 }
 
-func dataSourceGCPConnectorRead(d *schema.ResourceData, meta interface{}) error {
+func dataSourceGCPConnectorRead(_ context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	log.Printf("[DEBUG] Reading gcp connector %q ", d.Get("connector_id"))
 
 	service := meta.(*gcp.ConnectorService)
 	connector, err := service.Get(d.Get("connector_id").(string))
 	if err != nil {
-		return err
+		return diag.FromErr(err)
 	}
 
 	d.SetId(connector.ConnectorID)

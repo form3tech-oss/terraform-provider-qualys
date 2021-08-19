@@ -3,7 +3,7 @@ package provider
 import (
 	"fmt"
 	"github.com/form3tech-oss/terraform-provider-qualys/cloudview/gcp"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"os"
 	"testing"
 )
@@ -24,9 +24,9 @@ func TestDataSourceGcpConnector_basic(t *testing.T) {
 	}
 
 	resource.Test(t, resource.TestCase{
-		IsUnitTest: true,
-		PreCheck:   func() { testAccPreCheck(t) },
-		Providers:  testAccProviders,
+		IsUnitTest:        true,
+		PreCheck:          func() { testAccPreCheck(t) },
+		ProviderFactories: testAccProviders,
 		Steps: []resource.TestStep{
 			{
 				Config: getHclDataSourceConfig(resp.ConnectorID),
