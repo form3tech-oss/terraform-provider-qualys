@@ -11,6 +11,7 @@ import (
 
 func resourceGCPConnector() *schema.Resource {
 	return &schema.Resource{
+		Description:   "A Qualys connector used for scanning GCP project assets",
 		CreateContext: resourceGCPConnectorCreate,
 		ReadContext:   resourceGCPConnectorRead,
 		UpdateContext: resourceGCPConnectorUpdate,
@@ -21,29 +22,35 @@ func resourceGCPConnector() *schema.Resource {
 
 		Schema: map[string]*schema.Schema{
 			"connector_id": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Description: "The unique ID for this connector instance",
+				Type:        schema.TypeString,
+				Computed:    true,
 			},
 			"name": {
-				Type:     schema.TypeString,
-				Required: true,
+				Description: "Name of the connector",
+				Type:        schema.TypeString,
+				Required:    true,
 			},
 			"description": {
-				Type:     schema.TypeString,
-				Optional: true,
+				Description: "A string describing this connector instance",
+				Type:        schema.TypeString,
+				Optional:    true,
 			},
 			"gcp_credentials_json": {
-				Type:      schema.TypeString,
-				Sensitive: true,
-				Required:  true,
+				Description: "The JSON credentials file for a GCP service account",
+				Type:        schema.TypeString,
+				Sensitive:   true,
+				Required:    true,
 			},
 			"project_id": {
-				Type:     schema.TypeString,
-				Required: true,
+				Description: "GCP project id",
+				Type:        schema.TypeString,
+				Required:    true,
 			},
 			"cloud_provider": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Description: "The cloud provider associated with this connector",
+				Type:        schema.TypeString,
+				Computed:    true,
 			},
 		},
 	}

@@ -28,4 +28,8 @@ vet:
 		exit 1; \
 	fi
 
+docs:
+	tfplugindocs generate
+
+
 .PHONY:test vet fmt fmtcheck

@@ -11,56 +11,68 @@ import (
 
 func dataSourceGCPConnector() *schema.Resource {
 	return &schema.Resource{
+		Description: "Returns the details of the connector instances defined by the `connector_id`",
 		ReadContext: dataSourceGCPConnectorRead,
 
 		Schema: map[string]*schema.Schema{
 			"cloud_provider": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Description: "The cloud provider associated with this connector",
+				Type:        schema.TypeString,
+				Computed:    true,
 			},
 			"connector_id": {
-				Type:     schema.TypeString,
-				Required: true,
+				Description: "The unique ID for this connector instance",
+				Type:        schema.TypeString,
+				Required:    true,
 			},
 			"description": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Description: "A string describing this connector instance",
+				Type:        schema.TypeString,
+				Computed:    true,
 			},
 			"groups": {
-				Type:     schema.TypeSet,
-				Computed: true,
+				Description: "Groups that this connector belong to",
+				Type:        schema.TypeSet,
+				Computed:    true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"name": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Description: "Name of group",
+							Type:        schema.TypeString,
+							Computed:    true,
 						},
 						"uuid": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Description: "ID of group",
+							Type:        schema.TypeString,
+							Computed:    true,
 						},
 					},
 				},
 			},
 			"last_synced_on": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Description: "Last sync timestamp",
+				Type:        schema.TypeString,
+				Computed:    true,
 			},
 			"name": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Description: "Name of the connector",
+				Type:        schema.TypeString,
+				Computed:    true,
 			},
 			"project_id": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Description: "GCP project id",
+				Type:        schema.TypeString,
+				Computed:    true,
 			},
 			"total_assets": {
-				Type:     schema.TypeInt,
-				Computed: true,
+				Description: "Total assets associated with this connector",
+				Type:        schema.TypeInt,
+				Computed:    true,
 			},
 			"state": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Description: "State of the connector",
+				Type:        schema.TypeString,
+				Computed:    true,
 			},
 		},
 	}

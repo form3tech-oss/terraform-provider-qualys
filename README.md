@@ -33,8 +33,11 @@ output "my_test_connector_project_id" {
 }
 
 resource "qualys_gcp_connector"  "my_dev_connector" {
-    name           = "dev_gcp"
-    description    = "dev_gcp"
-    config_file     = file("./dev_gcp.json")
+    name                = "dev_gcp"
+    description         = "dev_gcp"
+    gcp_config_file     = file("./service_account.json")
 }
+
 ```
+
+See the Qualys steps on obtaining a service account configuration file for further details ([here](https://qualysguard.qg2.apps.qualys.com/cloudview/help/connector/gcp_v1/gcp_config_download.htm)).
